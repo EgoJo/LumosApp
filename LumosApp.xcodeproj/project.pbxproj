@@ -6,17 +6,34 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		45C69F8C2F5063E9000DAF01 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C69F812F5063E9000DAF01 /* AppState.swift */; };
+		45C69F8D2F5063E9000DAF01 /* DiscoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C69F842F5063E9000DAF01 /* DiscoverView.swift */; };
+		45C69F8E2F5063E9000DAF01 /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C69F862F5063E9000DAF01 /* MessagesView.swift */; };
+		45C69F8F2F5063E9000DAF01 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C69F872F5063E9000DAF01 /* Models.swift */; };
+		45C69F902F5063E9000DAF01 /* LumosApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C69F852F5063E9000DAF01 /* LumosApp.swift */; };
+		45C69F912F5063E9000DAF01 /* Overlays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C69F882F5063E9000DAF01 /* Overlays.swift */; };
+		45C69F922F5063E9000DAF01 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C69F8B2F5063E9000DAF01 /* TodayView.swift */; };
+		45C69F932F5063E9000DAF01 /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C69F8A2F5063E9000DAF01 /* RootTabView.swift */; };
+		45C69F942F5063E9000DAF01 /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C69F822F5063E9000DAF01 /* AvatarView.swift */; };
+		45C69F952F5063E9000DAF01 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C69F832F5063E9000DAF01 /* DesignSystem.swift */; };
+		45C69F962F5063E9000DAF01 /* README_iOS.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C69F892F5063E9000DAF01 /* README_iOS.md */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		45C69F712F5063CB000DAF01 /* LumosApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LumosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		45C69F812F5063E9000DAF01 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		45C69F822F5063E9000DAF01 /* AvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarView.swift; sourceTree = "<group>"; };
+		45C69F832F5063E9000DAF01 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
+		45C69F842F5063E9000DAF01 /* DiscoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverView.swift; sourceTree = "<group>"; };
+		45C69F852F5063E9000DAF01 /* LumosApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LumosApp.swift; sourceTree = "<group>"; };
+		45C69F862F5063E9000DAF01 /* MessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
+		45C69F872F5063E9000DAF01 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		45C69F882F5063E9000DAF01 /* Overlays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Overlays.swift; sourceTree = "<group>"; };
+		45C69F892F5063E9000DAF01 /* README_iOS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README_iOS.md; sourceTree = "<group>"; };
+		45C69F8A2F5063E9000DAF01 /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
+		45C69F8B2F5063E9000DAF01 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		45C69F732F5063CB000DAF01 /* LumosApp */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = LumosApp;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		45C69F6E2F5063CB000DAF01 /* Frameworks */ = {
@@ -32,7 +49,17 @@
 		45C69F682F5063CB000DAF01 = {
 			isa = PBXGroup;
 			children = (
-				45C69F732F5063CB000DAF01 /* LumosApp */,
+				45C69F812F5063E9000DAF01 /* AppState.swift */,
+				45C69F822F5063E9000DAF01 /* AvatarView.swift */,
+				45C69F832F5063E9000DAF01 /* DesignSystem.swift */,
+				45C69F842F5063E9000DAF01 /* DiscoverView.swift */,
+				45C69F852F5063E9000DAF01 /* LumosApp.swift */,
+				45C69F862F5063E9000DAF01 /* MessagesView.swift */,
+				45C69F872F5063E9000DAF01 /* Models.swift */,
+				45C69F882F5063E9000DAF01 /* Overlays.swift */,
+				45C69F892F5063E9000DAF01 /* README_iOS.md */,
+				45C69F8A2F5063E9000DAF01 /* RootTabView.swift */,
+				45C69F8B2F5063E9000DAF01 /* TodayView.swift */,
 				45C69F722F5063CB000DAF01 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -60,9 +87,6 @@
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				45C69F732F5063CB000DAF01 /* LumosApp */,
-			);
 			name = LumosApp;
 			packageProductDependencies = (
 			);
@@ -82,6 +106,7 @@
 				TargetAttributes = {
 					45C69F702F5063CB000DAF01 = {
 						CreatedOnToolsVersion = 26.2;
+						LastSwiftMigration = 2620;
 					};
 				};
 			};
@@ -109,6 +134,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45C69F962F5063E9000DAF01 /* README_iOS.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +145,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45C69F8C2F5063E9000DAF01 /* AppState.swift in Sources */,
+				45C69F8D2F5063E9000DAF01 /* DiscoverView.swift in Sources */,
+				45C69F8E2F5063E9000DAF01 /* MessagesView.swift in Sources */,
+				45C69F8F2F5063E9000DAF01 /* Models.swift in Sources */,
+				45C69F902F5063E9000DAF01 /* LumosApp.swift in Sources */,
+				45C69F912F5063E9000DAF01 /* Overlays.swift in Sources */,
+				45C69F922F5063E9000DAF01 /* TodayView.swift in Sources */,
+				45C69F932F5063E9000DAF01 /* RootTabView.swift in Sources */,
+				45C69F942F5063E9000DAF01 /* AvatarView.swift in Sources */,
+				45C69F952F5063E9000DAF01 /* DesignSystem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,6 +285,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
@@ -269,6 +306,7 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -280,6 +318,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
