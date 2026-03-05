@@ -1,63 +1,140 @@
 # Lumos · iOS
 
-原生 iOS 工程（SwiftUI），基于 [Lumos 产品概念文档](https://github.com/EgoJo/LumosApp) 与执行 PRD 的 **本地 Mock Demo**：今日问题、语音回答、分身预览、观点流、智能追问、消息与真人接管等链路均可走通，不接真实后端。
+*你的分身，帮你被同频的人找到。*
+
+原生 iOS 工程（SwiftUI），本地 Mock Demo，无后端依赖。Onboarding、语音回答、分身预览、观点流、智能追问、用户主页、消息通知、真人接管等完整链路均可在模拟器 / 真机上走通。
 
 ---
 
-## Lumos 原生 iOS 工程说明（骨架）
+## 快速开始
 
-你现在这个仓库里，是 **可直接用于 Xcode 的 Swift 源码**。在 Xcode 里建好工程、把 `.swift` 文件加入工程后，即可得到一个可运行的 App 壳（功能目前用本地 Mock 和状态机）。服务端后续再接。
+1. 打开 Xcode → `File > New > Project…` → **iOS > App**
+2. Product Name `Lumos`，Interface `SwiftUI`，Language `Swift`
+3. 将仓库中所有 `.swift` 文件拖入工程，勾选 **Copy items if needed**
+4. 删除 Xcode 自动生成的 `ContentView.swift`
+5. 选择 iPhone 模拟器（推荐 iPhone 15 Pro）→ `Cmd+R`
 
-### 一、在 Xcode 里创建 SwiftUI 工程
+> 工程无第三方依赖，不需要 CocoaPods / SPM。
 
-1. 打开 Xcode → `File > New > Project…`
-2. 选择 **iOS > App** → `Next`
-3. 填写：
-   - Product Name：`Lumos`
-   - Interface：`SwiftUI`
-   - Language：`Swift`
-4. 选一个目录保存（如 `~/Desktop/LumosApp`）。
+---
 
-> 将本仓库中的 `.swift` 文件拖进 Xcode 工程（勾选 “Copy items if needed”）。
+## 文件一览
 
-### 二、文件一览
-
-| 文件 | 说明 |
+| 文件 | 职责 |
 |------|------|
-| `LumosApp.swift` | App 入口，全局 `AppState`，根视图 `RootTabView` |
-| `AppState.swift` | 全局状态：Tab、Onboarding、今日/往期问题、观点流、消息、弹层 |
-| `RootTabView.swift` | 4 个 Tab（今日 / 发现 / 分身 / 消息）+ 统一 sheet |
-| `TodayView.swift` | 今日 Tab：Onboarding 3 题 + 常态今日回答 + 往期回答列表 |
-| `AvatarView.swift` | 分身 Tab：头像、对齐率、邀请校准、话题筛选、观点流 |
-| `DiscoverView.swift` | 发现 Tab：他人观点流卡片 + 追问入口 + 本地搜索 |
-| `MessagesView.swift` | 消息 Tab：对你分身的追问 / 其他动静，空态引导 |
-| `Overlays.swift` | 所有弹层：录音、分身预览、完成、今日详情、追问、设置、邀请校准、消息详情、往期详情等 |
-| `Models.swift` | 数据结构：`Question` / `Viewpoint` / `MessageItem` / `ActiveSheet` 等 |
-| `DesignSystem.swift` | 颜色、按钮样式、DeviceShell 外壳等 |
+| `LumosApp.swift` | App 入口，创建 `AppState`，挂载 `RootTabView` |
+| `AppState.swift` | 全局状态：Tab、Onboarding 进度、Mock 数据、弹层路由、所有 action 方法 |
+| `Models.swift` | 数据结构：`Question` / `Viewpoint` / `MessageItem` / `ActiveSheet` 枚举 |
+| `DesignSystem.swift` | 设计 Token（颜色 / 字体）、`PrimaryButtonStyle`、`ChipView`、`DeviceShell` |
+| `RootTabView.swift` | 4 Tab 容器 + 自定义 TabBar（消息红点动态联动）+ 统一 sheet 路由 |
+| `TodayView.swift` | 今日 Tab：Onboarding 3 题 / 正式态分身回答卡 / 往期回答列表 |
+| `AvatarView.swift` | 分身 Tab：头像、对齐率、邀请校准、话题筛选、我的观点流 |
+| `DiscoverView.swift` | 发现 Tab：6 条观点 feed、用户主页入口、本地搜索 |
+| `MessagesView.swift` | 消息 Tab：分区列表、未读标记、空态引导 |
+| `Overlays.swift` | 全部 10 个弹层 Sheet |
 
-> 录音、网络、AI 生成等 **均为本地 Mock**，便于先跑通体验再接真实服务。
+---
 
-### 三、推荐工程结构（Xcode Group）
+## 推荐 Xcode Group 结构
 
-```text
+```
 Lumos
 ├─ App/         LumosApp.swift, AppState.swift
 ├─ Core/        Models.swift, DesignSystem.swift
-├─ Features/    Today/, Discover/, Avatar/, Messages/
+├─ Features/    TodayView.swift, DiscoverView.swift, AvatarView.swift, MessagesView.swift
 ├─ UI/          RootTabView.swift, Overlays.swift
-└─ Supporting/  README.md, README_iOS.md
+└─ Supporting/  README.md
 ```
 
-### 四、运行
+---
 
-1. 在 Xcode 中打开工程，确认所有 `.swift` 已加入 Target。
-2. 选择 iPhone 模拟器（如 iPhone 15 Pro），`Cmd+R` 运行。
+## 功能模块
 
-### 五、执行 PRD v2：本地 Demo 路径摘要
+### 今日 Tab
 
-- **今日**：设置入口、Onboarding 3 题（录音 → 分身预览 → 完成）、今日分身回答 + 我来接管、往期回答点击进详情。
-- **发现**：观点流列表、追问（每条仅一次）、本地搜索。
-- **分身**：邀请朋友校准、话题筛选、我的观点流。
-- **消息**：空态引导、对你分身的追问 / 其他动静分区、点击进消息详情（完整展示追问内容）。
+**Onboarding 态**（首次启动，3 题完成前）
 
-详细说明见 **README_iOS.md**。
+- 横向进度条 + 当前题号
+- 深色问题卡 + 「用语音回答」CTA
+- 点击 → `RecordingSheet`（本地计时模拟录音，≥ 3 秒后可提交）
+- 提交 → `PreviewSheet`（展示分身 Mock 回答）→ 确认推进下一题
+- 3 题全部完成 → `OnboardingDoneSheet`（对齐率 42%）→ 分身上线
+
+**正式态**（Onboarding 完成后）
+
+- 分身今日回答卡（回答摘要 + 追问状态）
+- 接管前：「我来接管」按钮（琥珀色状态提示）
+- 接管后：「真人已接管，今日已回复」+ 「修改回复」入口
+- 往期回答列表，点击进入 `PastAnswerDetailSheet`
+
+### 发现 Tab
+
+- 6 条 Mock 观点 feed（今日问题对应的排在最前）
+- 点击卡片**头像区域** → `UserProfileSheet`（该用户的完整观点主页）
+- 点击「追问」→ `ProbeSheet`（预设追问 3 条，按回答关键词自动匹配分支；支持自定义，≥ 10 字发送）
+- 每条观点只能追问一次，已追问变灰
+- 右上角搜索 → 本地模糊匹配（人名 / 职称 / 问题 / 回答）
+
+### 分身 Tab
+
+- 头像 + 名字 + 简介 + 分身对齐率进度条
+- 「邀请朋友校准分身」→ `InviteCalibrationSheet`（Mock 链接）
+- 话题筛选 Chips：全部 / 职场 / 人生 / 创业 / 随想
+- 我的观点流列表
+
+### 消息 Tab
+
+- Onboarding 完成后自动注入 4 条预置消息，模拟「分身已在工作」：
+  - 2 条 `myPersona`（有人追问了你的分身）
+  - 1 条 `otherPersona`（你追问的分身回复了）
+  - 1 条 `system`（分身今日动态，对齐率更新）
+- 分两区展示：**对你分身的追问** / **分身世界的其他动静**
+- 点击消息 → 标记已读 + 打开 `MessageDetailSheet`
+- 全部消息已读后，TabBar 红点自动消失
+- 从发现页发起追问后，消息自动写入列表（按分身聚合）
+
+---
+
+## 弹层路由速查
+
+| 触发路径 | 弹层 |
+|---------|------|
+| 今日 → 用语音回答 | `RecordingSheet` |
+| RecordingSheet → 提交 | `PreviewSheet` |
+| PreviewSheet → 第 3 题确认 | `OnboardingDoneSheet` |
+| 今日 → 我来接管 / 修改回复 | `AvatarAnswerDetailSheet` |
+| 今日 → 往期回答列表 | `PastAnswerDetailSheet` |
+| 发现 → 点击头像区域 | `UserProfileSheet` |
+| 发现 / 用户主页 → 追问 | `ProbeSheet` |
+| 今日 Header → 设置按钮 | `SettingsSheet` |
+| 分身 → 邀请校准卡 | `InviteCalibrationSheet` |
+| 消息 → 消息行 | `MessageDetailSheet` |
+
+---
+
+## Mock 说明
+
+本 Demo 所有数据均为本地内存 Mock，不请求任何系统权限或网络：
+
+| 能力 | Mock 方式 |
+|------|-----------|
+| 语音录音 | 本地计时 + 动效，不录制真实音频 |
+| 分身生成 | 3 条硬编码回答文案 |
+| 分身对齐率 | 固定常量（42% / 68% / 73%） |
+| 消息推送 | Onboarding 完成后一次性注入 |
+| 邀请链接 | Mock URL，复制按钮只改本地状态 |
+| 数据持久化 | 无，App 重启后重置 |
+
+---
+
+## 后续接入方向
+
+接入真实后端时，建议在 `Core/` 旁新增：
+
+```
+Services/      网络层（QuestionService、AuthService 等）
+Persistence/   本地存储（UserDefaults / Keychain）
+Config/        环境配置（dev / staging / prod）
+```
+
+优先级：用户认证 → 语音转文字 + 分身生成 → 每日问题推送 → 分身对齐率算法 → 追问实时推送。
