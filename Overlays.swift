@@ -351,18 +351,16 @@ struct OnboardingDoneSheet: View {
                 Spacer()
                 VStack(spacing: 10) {
                     Button {
-                        appState.hasFinishedOnboarding = true
                         dismiss()
-                        appState.closeSheet()
+                        appState.finishOnboarding()   // 同时 seed 预置消息
                     } label: {
                         Text("看看分身今天说了什么")
                     }
                     .buttonStyle(PrimaryButtonStyle())
                     Button {
-                        appState.hasFinishedOnboarding = true
-                        dismiss()
                         appState.currentTab = .discover
-                        appState.closeSheet()
+                        dismiss()
+                        appState.finishOnboarding()   // 同时 seed 预置消息
                     } label: {
                         Text("去发现页看看")
                     }
@@ -375,9 +373,12 @@ struct OnboardingDoneSheet: View {
     }
 }
 
-// MARK: - Avatar 今日回答详情（简化）
+// MARK: - Avatar 今日回答详情
 
 struct AvatarAnswerDetailSheet: View {
+    let question: String
+    let answer: String
+    @EnvironmentObject private var appState: AppState
     @Environment(\.dismiss) private var dismiss
     
     @State private var humanReply: String = ""
@@ -390,7 +391,7 @@ struct AvatarAnswerDetailSheet: View {
                     Text("今日问题")
                         .font(.system(size: 10, weight: .medium, design: .monospaced))
                         .foregroundColor(LumosColor.ink4)
-                    Text("35岁拿了大礼包想退休，你最可能去做什么？")
+                    Text(question)
                         .font(.system(size: 20, weight: .light, design: .serif))
                         .italic()
                         .foregroundColor(LumosColor.ink)
@@ -410,7 +411,7 @@ struct AvatarAnswerDetailSheet: View {
                                 .font(.system(size: 12))
                                 .foregroundColor(LumosColor.ink3)
                         }
-                        Text("可能会去做乐队吧。不是那种想靠音乐赚钱的，就是纯粹想跟几个真正喜欢音乐的人，做出一点点让自己觉得有意思的东西。互联网做久了，太多时候都在优化，在迭代，在找更大规模。但好的东西不一定需要规模。")
+                        Text(answer)
                             .font(.system(size: 14.5))
                             .foregroundColor(LumosColor.ink)
                             .lineSpacing(5)
@@ -428,37 +429,11 @@ struct AvatarAnswerDetailSheet: View {
                     .padding(.top, 4)
                     
                     VStack(alignment: .leading, spacing: 10) {
-                        Text("亲自接管一下？")
+                        Text(hasSentHumanReply ? "你的真人回复" : "亲自接管一下？")
                             .font(.system(size: 11, weight: .medium, design: .monospaced))
-                            .foregroundColor(LumosColor.ink4)
-                        TextEditor(text: $humanReply)
-                            .frame(minHeight: 80, maxHeight: 140)
-                            .padding(10)
-                            .background(
-                                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                    .fill(Color.white)
-                                    .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
-                            )
-                            .overlay(
-                                Group {
-                                    if humanReply.isEmpty && !hasSentHumanReply {
-                                        Text("写下你想亲自说的话（Mock，不会真的发送）…")
-                                            .font(.system(size: 13))
-                                            .foregroundColor(LumosColor.ink5)
-                                            .padding(.horizontal, 16)
-                                            .padding(.vertical, 12)
-                                            .allowsHitTesting(false)
-                                    }
-                                }
-                            )
-                        Button {
-                            hasSentHumanReply = true
-                        } label: {
-                            Text(hasSentHumanReply ? "已接管并回复（Mock）" : "发送真人回复（Mock）")
-                        }
-                        .buttonStyle(PrimaryButtonStyle())
-                        .disabled(humanReply.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || hasSentHumanReply)
+                            .foregroundColor(hasSentHumanReply ? LumosColor.amber : LumosColor.ink4)
                         
+                        // 已接管时展示已发回复气泡，可继续编辑
                         if hasSentHumanReply {
                             VStack(alignment: .leading, spacing: 6) {
                                 Text("阿基米德 · 真人")
@@ -479,6 +454,39 @@ struct AvatarAnswerDetailSheet: View {
                                     )
                             )
                         }
+                        
+                        TextEditor(text: $humanReply)
+                            .frame(minHeight: 80, maxHeight: 140)
+                            .padding(10)
+                            .background(
+                                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                    .fill(Color.white)
+                                    .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
+                            )
+                            .overlay(
+                                Group {
+                                    if humanReply.isEmpty {
+                                        Text(hasSentHumanReply
+                                             ? "修改你的回复…"
+                                             : "写下你想亲自说的话（Mock，不会真的发送）…")
+                                            .font(.system(size: 13))
+                                            .foregroundColor(LumosColor.ink5)
+                                            .padding(.horizontal, 16)
+                                            .padding(.vertical, 12)
+                                            .allowsHitTesting(false)
+                                    }
+                                }
+                            )
+                        
+                        Button {
+                            // 写入接管状态，之后 Today 卡片同步
+                            appState.takeOverToday()
+                            hasSentHumanReply = true
+                        } label: {
+                            Text(hasSentHumanReply ? "更新真人回复（Mock）" : "发送真人回复（Mock）")
+                        }
+                        .buttonStyle(PrimaryButtonStyle())
+                        .disabled(humanReply.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     }
                     .padding(.top, 20)
                 }
@@ -487,6 +495,8 @@ struct AvatarAnswerDetailSheet: View {
                 .padding(.bottom, 24)
             }
             .background(LumosColor.paper.ignoresSafeArea())
+            .navigationTitle(hasSentHumanReply ? "我的回复" : "分身今日回答")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
@@ -878,7 +888,216 @@ struct InviteCalibrationSheet: View {
     }
 }
 
-// MARK: - 消息详情（Mock 对话预览）
+// MARK: - 用户观点主页（发现页 → 点击头像/名字进入）
+
+struct UserProfileSheet: View {
+    let viewpoint: Viewpoint          // 用来识别是哪个用户，以及初始展示哪条观点
+    @EnvironmentObject private var appState: AppState
+    @Environment(\.dismiss) private var dismiss
+
+    // 该用户在 discoverFeed 里的所有观点
+    private var allViewpoints: [Viewpoint] {
+        appState.discoverFeed.filter { $0.ownerName == viewpoint.ownerName }
+    }
+
+    var body: some View {
+        NavigationView {
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 0) {
+
+                    // ── 顶部用户信息 ──────────────────────────────
+                    VStack(alignment: .leading, spacing: 0) {
+                        HStack(alignment: .center, spacing: 16) {
+                            Circle()
+                                .fill(LumosColor.paper2)
+                                .frame(width: 60, height: 60)
+                                .overlay(
+                                    Text(String(viewpoint.ownerName.first ?? "·"))
+                                        .font(.system(size: 24, weight: .light, design: .serif))
+                                        .italic()
+                                        .foregroundColor(LumosColor.ink2)
+                                )
+                                .overlay(
+                                    Circle()
+                                        .stroke(LumosColor.ink4.opacity(0.35), lineWidth: 1)
+                                )
+                            VStack(alignment: .leading, spacing: 5) {
+                                HStack(spacing: 8) {
+                                    Text(viewpoint.ownerName)
+                                        .font(.system(size: 22, weight: .light, design: .serif))
+                                        .italic()
+                                        .foregroundColor(LumosColor.ink)
+                                    if let title = viewpoint.ownerTitle {
+                                        Text(title)
+                                            .font(.system(size: 10, weight: .medium))
+                                            .padding(.horizontal, 8)
+                                            .frame(height: 20)
+                                            .background(
+                                                Capsule().fill(LumosColor.ink.opacity(0.05))
+                                            )
+                                            .overlay(
+                                                Capsule()
+                                                    .stroke(LumosColor.ink4.opacity(0.5), lineWidth: 1)
+                                            )
+                                            .foregroundColor(LumosColor.ink3)
+                                    }
+                                }
+                                if let bio = viewpoint.ownerBio {
+                                    Text(bio)
+                                        .font(.system(size: 13))
+                                        .foregroundColor(LumosColor.ink3)
+                                        .lineSpacing(3)
+                                }
+                            }
+                        }
+                        .padding(.horizontal, 24)
+                        .padding(.top, 20)
+                        .padding(.bottom, 16)
+
+                        // 分身对齐率（展示用，不可操作）
+                        HStack(spacing: 10) {
+                            Text("分身对齐率")
+                                .font(.system(size: 11, design: .monospaced))
+                                .foregroundColor(LumosColor.ink4)
+                            ProgressView(value: 0.73)
+                                .tint(LumosColor.amber)
+                                .frame(maxWidth: .infinity)
+                            Text("73%")
+                                .font(.system(size: 11, weight: .semibold))
+                                .foregroundColor(LumosColor.amber)
+                        }
+                        .padding(.horizontal, 24)
+                        .padding(.bottom, 20)
+
+                        Divider()
+                            .padding(.horizontal, 24)
+                    }
+                    .background(LumosColor.paper)
+
+                    // ── 观点列表 ──────────────────────────────────
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text("TA 的分身观点")
+                            .font(.system(size: 10, weight: .medium, design: .monospaced))
+                            .foregroundColor(LumosColor.ink4)
+                            .tracking(0.12)
+                            .padding(.horizontal, 24)
+                            .padding(.top, 18)
+                            .padding(.bottom, 10)
+
+                        ForEach(allViewpoints) { vp in
+                            profileViewpointCard(for: vp)
+                                .padding(.horizontal, 20)
+                                .padding(.bottom, 10)
+                        }
+                    }
+
+                    Spacer(minLength: 32)
+                }
+            }
+            .background(LumosColor.paper.ignoresSafeArea())
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "chevron.down")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(LumosColor.ink3)
+                    }
+                }
+                ToolbarItem(placement: .principal) {
+                    Text("\(viewpoint.ownerName) 的分身主页")
+                        .font(.system(size: 15, weight: .medium))
+                        .foregroundColor(LumosColor.ink)
+                }
+            }
+        }
+    }
+
+    // 每条观点卡片（内嵌追问按钮）
+    private func profileViewpointCard(for vp: Viewpoint) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            // 问题
+            Text(vp.question)
+                .font(.system(size: 10, weight: .medium, design: .monospaced))
+                .foregroundColor(LumosColor.ink4)
+                .padding(.horizontal, 16)
+                .padding(.top, 14)
+
+            // 回答
+            Text(vp.answer)
+                .font(.system(size: 14))
+                .foregroundColor(LumosColor.ink2)
+                .lineSpacing(4)
+                .lineLimit(5)
+                .padding(.horizontal, 16)
+                .padding(.top, 6)
+                .padding(.bottom, 12)
+
+            // 底部：tag + 时间 + 追问
+            HStack(spacing: 6) {
+                ForEach(vp.tags.prefix(2), id: \.self) { tag in
+                    Text(tag)
+                        .font(.system(size: 10, weight: .medium))
+                        .padding(.horizontal, 8)
+                        .frame(height: 20)
+                        .background(Capsule().fill(LumosColor.ink.opacity(0.04)))
+                        .foregroundColor(LumosColor.ink4)
+                }
+                Text(vp.timeLabel)
+                    .font(.system(size: 10, design: .monospaced))
+                    .foregroundColor(LumosColor.ink5)
+                Spacer()
+                let hasProbed = appState.probedViewpointIDs.contains(vp.id)
+                Button {
+                    if !hasProbed {
+                        dismiss()
+                        // dismiss 后再打开 ProbeSheet，避免双层 sheet 冲突
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                            appState.openProbe(for: vp)
+                        }
+                    }
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: hasProbed ? "checkmark.circle.fill" : "text.bubble.fill")
+                            .font(.system(size: 11, weight: .semibold))
+                        Text(hasProbed ? "已追问" : "追问")
+                            .font(.system(size: 12, weight: .semibold))
+                    }
+                    .foregroundColor(hasProbed ? LumosColor.ink3 : LumosColor.paper)
+                    .padding(.horizontal, 13)
+                    .frame(height: 30)
+                    .background(hasProbed ? LumosColor.ink.opacity(0.05) : LumosColor.ink)
+                    .cornerRadius(9)
+                }
+                .disabled(hasProbed)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+            .background(
+                Rectangle()
+                    .fill(LumosColor.paper)
+                    .overlay(
+                        Rectangle()
+                            .fill(LumosColor.ink.opacity(0.05))
+                            .frame(height: 1),
+                        alignment: .top
+                    )
+            )
+        }
+        .background(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(Color.white)
+                .shadow(color: Color.black.opacity(0.07), radius: 7, x: 0, y: 3)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .stroke(LumosColor.ink4.opacity(0.2), lineWidth: 1)
+                )
+        )
+    }
+}
+
 
 struct MessageDetailSheet: View {
     let message: MessageItem

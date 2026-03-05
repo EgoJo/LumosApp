@@ -222,8 +222,9 @@ struct TodayView: View {
                     )
             )
             
-            // body（分身回答摘要）
-            Text("可能会去做乐队吧。不是那种想靠音乐赚钱的，就是纯粹想跟几个真正喜欢音乐的人，做出一点点让自己觉得有意思的东西。互联网做久了，太多时候都在优化、在迭代、在找更大规模。")
+            // body（分身回答摘要，来自 myViewpoints 第一条）
+            Text(appState.myViewpoints.first(where: { $0.isMine })?.answer
+                 ?? "分身今日回答加载中…")
                 .font(.system(size: 14))
                 .foregroundColor(LumosColor.ink2)
                 .lineSpacing(4)
@@ -234,26 +235,39 @@ struct TodayView: View {
             HStack {
                 HStack(spacing: 6) {
                     Circle()
-                        .fill(LumosColor.amber)
+                        .fill(appState.hasTakenOverToday ? LumosColor.green : LumosColor.amber)
                         .frame(width: 6, height: 6)
-                    Text("收到 3 个追问，分身正在回复")
+                    Text(appState.hasTakenOverToday
+                         ? "真人已接管，今日已回复"
+                         : "收到 3 个追问，分身正在回复")
                         .font(.system(size: 12))
                         .foregroundColor(LumosColor.ink3)
                 }
+                Spacer()
                 Button {
-                    appState.activeSheet = .avatarAnswerDetail
+                    appState.openAvatarAnswerDetail()
                 } label: {
                     HStack(spacing: 5) {
-                        Image(systemName: "person.crop.circle.badge.checkmark")
+                        Image(systemName: appState.hasTakenOverToday
+                              ? "pencil.circle"
+                              : "person.crop.circle.badge.checkmark")
                             .font(.system(size: 11, weight: .semibold))
-                        Text("我来接管")
+                        Text(appState.hasTakenOverToday ? "修改回复" : "我来接管")
                             .font(.system(size: 12, weight: .semibold))
                     }
-                    .foregroundColor(LumosColor.paper)
+                    .foregroundColor(appState.hasTakenOverToday ? LumosColor.ink3 : LumosColor.paper)
                     .padding(.horizontal, 14)
                     .frame(height: 32)
-                    .background(LumosColor.ink)
+                    .background(appState.hasTakenOverToday
+                                ? LumosColor.ink.opacity(0.06)
+                                : LumosColor.ink)
                     .cornerRadius(10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(appState.hasTakenOverToday
+                                    ? LumosColor.ink4.opacity(0.4)
+                                    : Color.clear, lineWidth: 1)
+                    )
                 }
             }
             .padding(.horizontal, 20)

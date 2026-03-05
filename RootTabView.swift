@@ -57,8 +57,9 @@ struct RootTabView: View {
                 case .onboardingDone:
                     OnboardingDoneSheet()
                         .environmentObject(appState)
-                case .avatarAnswerDetail:
-                    AvatarAnswerDetailSheet()
+                case .avatarAnswerDetail(let question, let answer):
+                    AvatarAnswerDetailSheet(question: question, answer: answer)
+                        .environmentObject(appState)
                 case .probe(let vp):
                     ProbeSheet(viewpoint: vp)
                         .environmentObject(appState)
@@ -70,6 +71,9 @@ struct RootTabView: View {
                         .environmentObject(appState)
                 case .messageDetail(let message):
                     MessageDetailSheet(message: message)
+                case .userProfile(let vp):
+                    UserProfileSheet(viewpoint: vp)
+                        .environmentObject(appState)
                 case .pastAnswer(let vp):
                     PastAnswerDetailSheet(viewpoint: vp)
                 }
@@ -81,6 +85,7 @@ struct RootTabView: View {
 // 底部自定义 TabBar
 private struct CustomTabBar: View {
     @Binding var current: LumosTab
+    @EnvironmentObject private var appState: AppState
     
     var body: some View {
         HStack(spacing: 32) {
@@ -90,7 +95,8 @@ private struct CustomTabBar: View {
                 .onTapGesture { current = .discover }
             TabItem(icon: "person.crop.circle", title: "分身", isActive: current == .avatar)
                 .onTapGesture { current = .avatar }
-            TabItem(icon: "bubble.left.and.bubble.right", title: "消息", isActive: current == .messages, showDot: true)
+            TabItem(icon: "bubble.left.and.bubble.right", title: "消息", isActive: current == .messages,
+                    showDot: appState.messages.contains(where: { $0.isUnread }))
                 .onTapGesture { current = .messages }
         }
         .frame(maxWidth: .infinity)

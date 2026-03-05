@@ -86,9 +86,17 @@ struct DiscoverView: View {
                         .foregroundColor(LumosColor.ink4)
                 }
                 Spacer()
+                // 进入用户主页的箭头提示
+                Image(systemName: "person.crop.circle")
+                    .font(.system(size: 16, weight: .light))
+                    .foregroundColor(LumosColor.ink4.opacity(0.7))
             }
             .padding(.horizontal, 18)
             .padding(.top, 16)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                appState.openUserProfile(for: vp)
+            }
             Text(vp.question)
                 .font(.system(size: 10, weight: .medium, design: .monospaced))
                 .foregroundColor(LumosColor.ink4)
