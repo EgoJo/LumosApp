@@ -13,8 +13,9 @@ struct DiscoverView: View {
                         .padding(.horizontal, 20)
                         .padding(.top, 10)
                 }
-                Spacer(minLength: 24)
             }
+            // 为底部自定义 TabBar 预留额外滚动空间，避免内容被遮挡或“穿透”
+            .padding(.bottom, 96)
         }
         .background(LumosColor.paper)
         .sheet(isPresented: $isShowingSearch) {

@@ -4,79 +4,80 @@ struct RootTabView: View {
     @EnvironmentObject private var appState: AppState
     
     var body: some View {
-        DeviceShell {
-            ZStack {
-                LumosColor.paper.ignoresSafeArea()
-                
-                VStack(spacing: 0) {
-                    // 顶部预留状态栏空间（9:41 + 信号电量）
-                    Spacer()
-                        .frame(height: 59)
-                    
-                    ZStack {
-                        switch appState.currentTab {
-                        case .today:
-                            TodayView()
-                        case .discover:
-                            DiscoverView()
-                        case .avatar:
-                            AvatarView()
-                        case .messages:
-                            MessagesView()
-                        }
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    
-                    CustomTabBar(current: $appState.currentTab)
-                        .frame(height: 88)
-                        .padding(.bottom, 12)
-                }
-                
-                // 顶部简化版状态栏（只画时间，不做图标）
-                VStack {
-                    HStack {
-                        Text("9:41")
-                            .font(.system(size: 15, weight: .medium))
-                            .foregroundColor(LumosColor.ink)
-                            .padding(.leading, 32)
-                        Spacer()
-                    }
-                    .padding(.top, 12)
-                    .padding(.bottom, 10)
-                    Spacer()
+        ZStack {
+            LumosColor.paper.ignoresSafeArea()
+            
+            // 主内容根据当前 Tab 切换
+            Group {
+                switch appState.currentTab {
+                case .today:
+                    TodayView()
+                case .discover:
+                    DiscoverView()
+                case .avatar:
+                    AvatarView()
+                case .messages:
+                    MessagesView()
                 }
             }
-            .sheet(item: $appState.activeSheet) { sheet in
-                switch sheet {
-                case .onboardingRecording:
-                    RecordingSheet()
-                        .environmentObject(appState)
-                case .onboardingPreview:
-                    PreviewSheet()
-                        .environmentObject(appState)
-                case .onboardingDone:
-                    OnboardingDoneSheet()
-                        .environmentObject(appState)
-                case .avatarAnswerDetail(let question, let answer):
-                    AvatarAnswerDetailSheet(question: question, answer: answer)
-                        .environmentObject(appState)
-                case .probe(let vp):
-                    ProbeSheet(viewpoint: vp)
-                        .environmentObject(appState)
-                case .settings:
-                    SettingsSheet()
-                        .environmentObject(appState)
-                case .inviteCalibration:
-                    InviteCalibrationSheet()
-                        .environmentObject(appState)
-                case .messageDetail(let message):
-                    MessageDetailSheet(message: message)
-                case .userProfile(let vp):
-                    UserProfileSheet(viewpoint: vp)
-                        .environmentObject(appState)
-                case .pastAnswer(let vp):
-                    PastAnswerDetailSheet(viewpoint: vp)
-                }
+        }
+        // 顶部自定义状态栏，使用 safeAreaInset 适配不同机型
+        .safeAreaInset(edge: .top) {
+            HStack {
+                Text("9:41")
+                    .font(.system(size: 15, weight: .medium))
+                    .foregroundColor(LumosColor.ink)
+                    .padding(.leading, 24)
+                Spacer()
+            }
+            .padding(.top, 4)
+            .padding(.bottom, 6)
+            .background(
+                LinearGradient(
+                    gradient: Gradient(colors: [LumosColor.paper.opacity(0.98), LumosColor.paper.opacity(0.9)]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            )
+        }
+        // 底部 TabBar，同样用 safeAreaInset 贴合各机型 Home Indicator
+        .safeAreaInset(edge: .bottom) {
+            CustomTabBar(current: $appState.currentTab)
+                .environmentObject(appState)
+                .padding(.top, 4)
+                .padding(.bottom, 6)
+        }
+        // 统一挂载所有弹层
+        .sheet(item: $appState.activeSheet) { sheet in
+            switch sheet {
+            case .onboardingRecording:
+                RecordingSheet()
+                    .environmentObject(appState)
+            case .onboardingPreview:
+                PreviewSheet()
+                    .environmentObject(appState)
+            case .onboardingDone:
+                OnboardingDoneSheet()
+                    .environmentObject(appState)
+            case .avatarAnswerDetail(let question, let answer):
+                AvatarAnswerDetailSheet(question: question, answer: answer)
+                    .environmentObject(appState)
+            case .probe(let vp):
+                ProbeSheet(viewpoint: vp)
+                    .environmentObject(appState)
+            case .settings:
+                SettingsSheet()
+                    .environmentObject(appState)
+            case .inviteCalibration:
+                InviteCalibrationSheet()
+                    .environmentObject(appState)
+            case .messageDetail(let message):
+                MessageDetailSheet(message: message)
+            case .userProfile(let vp):
+                UserProfileSheet(viewpoint: vp)
+                    .environmentObject(appState)
+            case .pastAnswer(let vp):
+                PastAnswerDetailSheet(viewpoint: vp)
             }
         }
     }
@@ -100,13 +101,10 @@ private struct CustomTabBar: View {
                 .onTapGesture { current = .messages }
         }
         .frame(maxWidth: .infinity)
-        .padding(.top, 8)
+        .padding(.horizontal, 32)
+        .padding(.vertical, 8)
         .background(
-            LinearGradient(
-                gradient: Gradient(colors: [LumosColor.paper, LumosColor.paper.opacity(0.0)]),
-                startPoint: .bottom,
-                endPoint: .top
-            )
+            Color(LumosColor.paper)
         )
     }
 }

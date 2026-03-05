@@ -22,109 +22,111 @@ struct RecordingSheet: View {
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 24) {
-                VStack(spacing: 8) {
-                    Text("建立分身 · 第 \(appState.onboardingStep.displayIndex) 题")
-                        .font(.system(size: 10, weight: .medium, design: .monospaced))
-                        .foregroundColor(LumosColor.amber)
-                    Text(currentQuestion.text)
-                        .font(.system(size: 21, weight: .light, design: .serif))
-                        .italic()
-                        .foregroundColor(LumosColor.ink)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 24)
-                }
-                Spacer()
-                VStack(spacing: 16) {
-                    ZStack {
-                        Circle()
-                            .stroke(LumosColor.amber.opacity(isRecording ? 0.4 : 0.15), lineWidth: 18)
-                            .frame(width: 180, height: 180)
-                            .scaleEffect(isRecording ? 1.05 : 1)
-                            .animation(.easeOut(duration: 0.5).repeatForever(autoreverses: true), value: isRecording)
-                        Button {
-                            toggleRecording()
-                        } label: {
+            ZStack {
+                LumosColor.paper.ignoresSafeArea()
+                VStack(spacing: 24) {
+                    VStack(spacing: 8) {
+                        Text("建立分身 · 第 \(appState.onboardingStep.displayIndex) 题")
+                            .font(.system(size: 10, weight: .medium, design: .monospaced))
+                            .foregroundColor(LumosColor.amber)
+                        Text(currentQuestion.text)
+                            .font(.system(size: 21, weight: .light, design: .serif))
+                            .italic()
+                            .foregroundColor(LumosColor.ink)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 24)
+                    }
+                    Spacer()
+                    VStack(spacing: 16) {
+                        ZStack {
                             Circle()
-                                .fill(isRecording ? LumosColor.red : LumosColor.ink)
-                                .frame(width: 96, height: 96)
-                                .shadow(color: Color.black.opacity(0.25), radius: 18, x: 0, y: 10)
-                                .overlay(
-                                    Image(systemName: "waveform")
-                                        .font(.system(size: 28, weight: .semibold))
-                                        .foregroundColor(LumosColor.paper)
-                                )
-                        }
-                    }
-                    Text(timeString)
-                        .font(.system(size: 20, weight: .semibold, design: .monospaced))
-                        .foregroundColor(LumosColor.ink)
-                    Text(hintText)
-                        .font(.system(size: 13))
-                        .foregroundColor(LumosColor.ink4)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 32)
-                    
-                    // 录音完成后的「听一遍 / 重录」操作区（Mock）
-                    if hasRecordedOnce && !isRecording {
-                        HStack(spacing: 12) {
+                                .stroke(LumosColor.amber.opacity(isRecording ? 0.4 : 0.15), lineWidth: 18)
+                                .frame(width: 180, height: 180)
+                                .scaleEffect(isRecording ? 1.05 : 1)
+                                .animation(.easeOut(duration: 0.5).repeatForever(autoreverses: true), value: isRecording)
                             Button {
-                                // Mock 回放，不做真实音频处理
-                                isPlayingPreview.toggle()
+                                toggleRecording()
                             } label: {
-                                Text(isPlayingPreview ? "正在回放（Mock）" : "听一遍（Mock）")
-                                    .font(.system(size: 13, weight: .medium))
-                                    .padding(.horizontal, 14)
-                                    .frame(height: 32)
-                                    .background(
-                                        Capsule()
-                                            .fill(LumosColor.ink.opacity(0.06))
+                                Circle()
+                                    .fill(isRecording ? LumosColor.red : LumosColor.ink)
+                                    .frame(width: 96, height: 96)
+                                    .shadow(color: Color.black.opacity(0.25), radius: 18, x: 0, y: 10)
+                                    .overlay(
+                                        Image(systemName: "waveform")
+                                            .font(.system(size: 28, weight: .semibold))
+                                            .foregroundColor(LumosColor.paper)
                                     )
-                                    .foregroundColor(LumosColor.ink3)
-                            }
-                            Button {
-                                // 重录：清空计时与状态
-                                seconds = 0
-                                hasRecordedOnce = false
-                                isPlayingPreview = false
-                            } label: {
-                                Text("重录")
-                                    .font(.system(size: 13, weight: .medium))
-                                    .padding(.horizontal, 18)
-                                    .frame(height: 32)
-                                    .background(
-                                        Capsule()
-                                            .stroke(LumosColor.ink4.opacity(0.4), lineWidth: 1.5)
-                                    )
-                                    .foregroundColor(LumosColor.ink3)
                             }
                         }
+                        Text(timeString)
+                            .font(.system(size: 20, weight: .semibold, design: .monospaced))
+                            .foregroundColor(LumosColor.ink)
+                        Text(hintText)
+                            .font(.system(size: 13))
+                            .foregroundColor(LumosColor.ink4)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 32)
+                        
+                        // 录音完成后的「听一遍 / 重录」操作区（Mock）
+                        if hasRecordedOnce && !isRecording {
+                            HStack(spacing: 12) {
+                                Button {
+                                    // Mock 回放，不做真实音频处理
+                                    isPlayingPreview.toggle()
+                                } label: {
+                                    Text(isPlayingPreview ? "正在回放（Mock）" : "听一遍（Mock）")
+                                        .font(.system(size: 13, weight: .medium))
+                                        .padding(.horizontal, 14)
+                                        .frame(height: 32)
+                                        .background(
+                                            Capsule()
+                                                .fill(LumosColor.ink.opacity(0.06))
+                                        )
+                                        .foregroundColor(LumosColor.ink3)
+                                }
+                                Button {
+                                    // 重录：清空计时与状态
+                                    seconds = 0
+                                    hasRecordedOnce = false
+                                    isPlayingPreview = false
+                                } label: {
+                                    Text("重录")
+                                        .font(.system(size: 13, weight: .medium))
+                                        .padding(.horizontal, 18)
+                                        .frame(height: 32)
+                                        .background(
+                                            Capsule()
+                                                .stroke(LumosColor.ink4.opacity(0.4), lineWidth: 1.5)
+                                        )
+                                        .foregroundColor(LumosColor.ink3)
+                                }
+                            }
+                        }
                     }
+                    Spacer()
+                    VStack(spacing: 10) {
+                        Button(action: submit) {
+                            Text("提交，看分身怎么说")
+                        }
+                        .buttonStyle(PrimaryButtonStyle())
+                        .disabled(!hasRecordedOnce || seconds < 3)
+                        .opacity((!hasRecordedOnce || seconds < 3) ? 0.5 : 1.0)
+                        .frame(maxWidth: 280)
+                        Button {
+                            dismiss()
+                            appState.closeSheet()
+                        } label: {
+                            Text("再想想")
+                        }
+                        .buttonStyle(GhostButtonStyle())
+                        .disabled(!hasRecordedOnce)
+                        .opacity(!hasRecordedOnce ? 0.5 : 1.0)
+                        .frame(maxWidth: 280)
+                    }
+                    .padding(.bottom, 24)
                 }
-                Spacer()
-                VStack(spacing: 10) {
-                    Button(action: submit) {
-                        Text("提交，看分身怎么说")
-                    }
-                    .buttonStyle(PrimaryButtonStyle())
-                    .disabled(!hasRecordedOnce || seconds < 3)
-                    .opacity((!hasRecordedOnce || seconds < 3) ? 0.5 : 1.0)
-                    .frame(maxWidth: 280)
-                    Button {
-                        dismiss()
-                        appState.closeSheet()
-                    } label: {
-                        Text("再想想")
-                    }
-                    .buttonStyle(GhostButtonStyle())
-                    .disabled(!hasRecordedOnce)
-                    .opacity(!hasRecordedOnce ? 0.5 : 1.0)
-                    .frame(maxWidth: 280)
-                }
-                .padding(.bottom, 24)
+                .padding(.top, 24)
             }
-            .padding(.top, 24)
-            .background(LumosColor.paper.ignoresSafeArea())
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -201,75 +203,79 @@ struct PreviewSheet: View {
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 16) {
-                Text("你的分身会这样说")
-                    .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(LumosColor.ink)
-                    .padding(.top, 16)
-                Text("建立分身 · 第 \(appState.onboardingStep.displayIndex) 题预览")
-                    .font(.system(size: 11, weight: .medium, design: .monospaced))
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 4)
-                    .background(
-                        Capsule().fill(LumosColor.amberBg)
-                    )
-                    .foregroundColor(LumosColor.amber)
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack(spacing: 10) {
-                            Circle()
-                                .fill(LumosColor.paper2)
-                                .frame(width: 28, height: 28)
-                                .overlay(
-                                    Text("阿")
-                                        .font(.system(size: 12, weight: .light, design: .serif))
-                                        .italic()
-                                        .foregroundColor(LumosColor.ink2)
-                                )
-                            Text("阿基米德的分身")
-                                .font(.system(size: 12))
-                                .foregroundColor(LumosColor.ink3)
+            ZStack {
+                LumosColor.paper.ignoresSafeArea()
+                VStack(spacing: 16) {
+                    Text("你的分身会这样说")
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(LumosColor.ink)
+                        .padding(.top, 16)
+                    Text("建立分身 · 第 \(appState.onboardingStep.displayIndex) 题预览")
+                        .font(.system(size: 11, weight: .medium, design: .monospaced))
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(
+                            Capsule().fill(LumosColor.amberBg)
+                        )
+                        .foregroundColor(LumosColor.amber)
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack(spacing: 10) {
+                                Circle()
+                                    .fill(LumosColor.paper2)
+                                    .frame(width: 28, height: 28)
+                                    .overlay(
+                                        Text("阿")
+                                            .font(.system(size: 12, weight: .light, design: .serif))
+                                            .italic()
+                                            .foregroundColor(LumosColor.ink2)
+                                    )
+                                Text("阿基米德的分身")
+                                    .font(.system(size: 12))
+                                    .foregroundColor(LumosColor.ink3)
+                            }
+                            Text(previewText)
+                                .font(.system(size: 15))
+                                .foregroundColor(LumosColor.ink)
+                                .lineSpacing(5)
                         }
-                        Text(previewText)
-                            .font(.system(size: 15))
-                            .foregroundColor(LumosColor.ink)
-                            .lineSpacing(5)
+                        .padding(20)
+                        .background(
+                            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                                .fill(Color.white)
+                                .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 24, style: .continuous)
+                                        .stroke(LumosColor.ink4.opacity(0.25), lineWidth: 1.5)
+                                )
+                        )
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 8)
                     }
-                    .padding(20)
-                    .background(
-                        RoundedRectangle(cornerRadius: 24, style: .continuous)
-                            .fill(Color.white)
-                            .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 24, style: .continuous)
-                                    .stroke(LumosColor.ink4.opacity(0.25), lineWidth: 1.5)
-                            )
-                    )
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 8)
+                    Text("像你说话的方式吗？不像可以调。")
+                        .font(.system(size: 13))
+                        .foregroundColor(LumosColor.ink4)
+                    VStack(spacing: 10) {
+                        Button {
+                            dismiss()
+                            appState.confirmCurrentOnboardingAnswer()
+                        } label: {
+                            Text(appState.onboardingStep == .q3 ? "就是这个感觉，完成" : "就是这个感觉，下一题")
+                        }
+                        .buttonStyle(PrimaryButtonStyle())
+                        .frame(maxWidth: 280)
+                        Button {
+                            dismiss()
+                            appState.startOnboardingRecording()
+                        } label: {
+                            Text("重新录音")
+                        }
+                        .buttonStyle(GhostButtonStyle())
+                        .frame(maxWidth: 280)
+                    }
+                    .padding(.bottom, 24)
                 }
-                Text("像你说话的方式吗？不像可以调。")
-                    .font(.system(size: 13))
-                    .foregroundColor(LumosColor.ink4)
-                VStack(spacing: 10) {
-                    Button {
-                        dismiss()
-                        appState.confirmCurrentOnboardingAnswer()
-                    } label: {
-                        Text(appState.onboardingStep == .q3 ? "就是这个感觉，完成" : "就是这个感觉，下一题")
-                    }
-                    .buttonStyle(PrimaryButtonStyle())
-                    Button {
-                        dismiss()
-                        appState.startOnboardingRecording()
-                    } label: {
-                        Text("重新录音")
-                    }
-                    .buttonStyle(GhostButtonStyle())
-                }
-                .padding(.bottom, 24)
             }
-            .background(LumosColor.paper.ignoresSafeArea())
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {

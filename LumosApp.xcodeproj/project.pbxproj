@@ -17,7 +17,7 @@
 		45C69F932F5063E9000DAF01 /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C69F8A2F5063E9000DAF01 /* RootTabView.swift */; };
 		45C69F942F5063E9000DAF01 /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C69F822F5063E9000DAF01 /* AvatarView.swift */; };
 		45C69F952F5063E9000DAF01 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C69F832F5063E9000DAF01 /* DesignSystem.swift */; };
-		45C69F962F5063E9000DAF01 /* README_iOS.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C69F892F5063E9000DAF01 /* README_iOS.md */; };
+		45D9A2372F5991F5002A8E91 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45D9A2362F5991F5002A8E91 /* Media.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,9 +30,9 @@
 		45C69F862F5063E9000DAF01 /* MessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesView.swift; sourceTree = "<group>"; };
 		45C69F872F5063E9000DAF01 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		45C69F882F5063E9000DAF01 /* Overlays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Overlays.swift; sourceTree = "<group>"; };
-		45C69F892F5063E9000DAF01 /* README_iOS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README_iOS.md; sourceTree = "<group>"; };
 		45C69F8A2F5063E9000DAF01 /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
 		45C69F8B2F5063E9000DAF01 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
+		45D9A2362F5991F5002A8E91 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,6 +49,7 @@
 		45C69F682F5063CB000DAF01 = {
 			isa = PBXGroup;
 			children = (
+				45D9A2362F5991F5002A8E91 /* Media.xcassets */,
 				45C69F812F5063E9000DAF01 /* AppState.swift */,
 				45C69F822F5063E9000DAF01 /* AvatarView.swift */,
 				45C69F832F5063E9000DAF01 /* DesignSystem.swift */,
@@ -57,7 +58,6 @@
 				45C69F862F5063E9000DAF01 /* MessagesView.swift */,
 				45C69F872F5063E9000DAF01 /* Models.swift */,
 				45C69F882F5063E9000DAF01 /* Overlays.swift */,
-				45C69F892F5063E9000DAF01 /* README_iOS.md */,
 				45C69F8A2F5063E9000DAF01 /* RootTabView.swift */,
 				45C69F8B2F5063E9000DAF01 /* TodayView.swift */,
 				45C69F722F5063CB000DAF01 /* Products */,
@@ -134,7 +134,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				45C69F962F5063E9000DAF01 /* README_iOS.md in Resources */,
+				45D9A2372F5991F5002A8E91 /* Media.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,6 +288,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8MB4435Y9Q;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -321,6 +322,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8MB4435Y9Q;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
